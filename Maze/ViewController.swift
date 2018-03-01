@@ -20,6 +20,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate{
     
     let cameraController = CameraController()
     
+    var wholeImage: UIImage!
     var mazeImage: UIImage!
     var comment: String!
     
@@ -71,28 +72,48 @@ class ViewController: UIViewController, UINavigationControllerDelegate{
         let features = detector.features(in: image)
         print("Found \(features.count) Rects")
         for feature in features as! [CIRectangleFeature] {
-            resultImage = self.drawHighlightOverlayForPoints(image: image, topLeft: feature.topLeft, topRight: feature.topRight, bottomLeft: feature.bottomLeft, bottomRight: feature.bottomRight)
+            resultImage = self.cropRect(image: image, feature: feature)
+            self.wholeImage = UIImage(ciImage: overlay(originalImage: image, feature: feature))
         }
         return resultImage
-        
     }
     
-    func drawHighlightOverlayForPoints(image: CIImage, topLeft: CGPoint, topRight: CGPoint,
-                                       bottomLeft: CGPoint, bottomRight: CGPoint) -> CIImage {
-        
+    func overlay(originalImage image: CIImage, feature rect: CIRectangleFeature) -> CIImage{
         var overlay = CIImage(color: CIColor(red: 1.0, green: 0.55, blue: 0.0, alpha: 0.45))
         overlay = overlay.cropped(to: image.extent)
         overlay = overlay.applyingFilter("CIPerspectiveTransformWithExtent",
-                                         parameters: [
+                                            parameters: [
                                                     "inputExtent": CIVector(cgRect: image.extent),
-                                                    "inputTopLeft": CIVector(cgPoint: topLeft),
-                                                    "inputTopRight": CIVector(cgPoint: topRight),
-                                                    "inputBottomLeft": CIVector(cgPoint: bottomLeft),
-                                                    "inputBottomRight": CIVector(cgPoint: bottomRight)
+                                                    "inputTopLeft": CIVector(cgPoint: rect.topLeft),
+                                                    "inputTopRight": CIVector(cgPoint: rect.topRight),
+                                                    "inputBottomLeft": CIVector(cgPoint: rect.bottomLeft),
+                                                    "inputBottomRight": CIVector(cgPoint: rect.bottomRight)
             ])
         return overlay.composited(over: image)
     }
+    
+    func cropRect(image originalImage: CIImage, feature rect:CIRectangleFeature) -> CIImage? {
 
+        let perspectiveCorrection = CIFilter(name: "CIPerspectiveCorrection")!
+        
+        let docImage = originalImage
+        
+        perspectiveCorrection.setValue(CIVector(cgPoint:rect.topLeft),
+                                       forKey: "inputTopLeft")
+        perspectiveCorrection.setValue(CIVector(cgPoint:rect.topRight),
+                                       forKey: "inputTopRight")
+        perspectiveCorrection.setValue(CIVector(cgPoint:rect.bottomRight),
+                                       forKey: "inputBottomRight")
+        perspectiveCorrection.setValue(CIVector(cgPoint:rect.bottomLeft),
+                                       forKey: "inputBottomLeft")
+        perspectiveCorrection.setValue(docImage,
+                                       forKey: kCIInputImageKey)
+        
+        let outputImage = perspectiveCorrection.outputImage
+        
+        return outputImage
+    }
+    
     @IBAction func toggleFlash(_ sender: UIButton) {
         if cameraController.flashMode == .on {
             cameraController.flashMode = .off
@@ -125,11 +146,13 @@ class ViewController: UIViewController, UINavigationControllerDelegate{
             }
             if let found = self.detectRect(image: CIImage(image: photo)!){
                 print("Found Rect")
+                // self.wholeImage set in detectRect in this case
                 self.mazeImage = UIImage(ciImage: found)
                 self.comment = "Found Rect"
             }else{
                 print("Didnt Found")
-                self.mazeImage = photo
+                self.wholeImage = photo
+                self.mazeImage = #imageLiteral(resourceName: "huaji")
                 self.comment = "Didn't Found"
             }
             
@@ -140,7 +163,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate{
             }
 
             destin.comment = self.comment
-            destin.image = self.mazeImage
+            destin.mazeImage = self.mazeImage
+            destin.wholeImage = self.wholeImage
             destin.update()
         }
     }

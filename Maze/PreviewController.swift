@@ -11,9 +11,11 @@ import UIKit
 
 class PreviewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate{
 
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var mazeImageView: UIImageView!
+    @IBOutlet weak var wholeImageView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!
-    var image: UIImage!
+    var wholeImage: UIImage!
+    var mazeImage: UIImage!
     var comment : String!
     
     override func viewDidLoad() {
@@ -30,7 +32,8 @@ class PreviewController: UIViewController, UINavigationControllerDelegate, UIIma
     }
     
     func update(){
-        self.imageView.image = self.image
+        self.mazeImageView.image = self.mazeImage
+        self.wholeImageView.image = self.wholeImage
         self.commentLabel.text = self.comment
     }
     
