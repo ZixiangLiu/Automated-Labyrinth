@@ -14,9 +14,9 @@ class PreviewController: UIViewController, UINavigationControllerDelegate, UIIma
     @IBOutlet weak var mazeImageView: UIImageView!
     @IBOutlet weak var wholeImageView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!
-    var wholeImage: UIImage!
-    var mazeImage: UIImage!
-    var comment : String!
+    
+    var smallImage: UIImage!
+    var maze = Maze()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,10 +31,17 @@ class PreviewController: UIViewController, UINavigationControllerDelegate, UIIma
         super.viewWillAppear(animated)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier=="MatrixView"){
+            let destination = segue.destination as! MatrixController
+            destination.maze = self.maze
+        }
+    }
+    
     func update(){
-        self.mazeImageView.image = self.mazeImage
-        self.wholeImageView.image = self.wholeImage
-        self.commentLabel.text = self.comment
+        self.mazeImageView.image = self.maze.mazeImage
+        self.wholeImageView.image = self.maze.wholeImage
+        self.commentLabel.text = self.maze.comment
     }
     
 }

@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -121,6 +122,13 @@
                                     <constraint firstAttribute="height" constant="300" id="pDZ-1x-0t8"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hL3-vn-vfq">
+                                <rect key="frame" x="237" y="627" width="64" height="30"/>
+                                <state key="normal" title="To Matrix"/>
+                                <connections>
+                                    <segue destination="fDT-5W-ak2" kind="show" identifier="MatrixView" id="v7R-44-Ar1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -128,7 +136,9 @@
                             <constraint firstItem="xFH-hB-UIA" firstAttribute="leading" secondItem="oOQ-pl-ZTf" secondAttribute="leading" id="Bbt-b4-dt4"/>
                             <constraint firstItem="Awt-mC-qqm" firstAttribute="leading" secondItem="oOQ-pl-ZTf" secondAttribute="leading" constant="20" id="HME-ds-UEM"/>
                             <constraint firstItem="lRy-Oi-0Ul" firstAttribute="leading" secondItem="oOQ-pl-ZTf" secondAttribute="leading" id="KIA-Qs-uzm"/>
+                            <constraint firstItem="oOQ-pl-ZTf" firstAttribute="bottom" secondItem="hL3-vn-vfq" secondAttribute="bottom" constant="10" id="NPC-50-Hey"/>
                             <constraint firstItem="oOQ-pl-ZTf" firstAttribute="trailing" secondItem="xFH-hB-UIA" secondAttribute="trailing" id="VT4-Ez-N9D"/>
+                            <constraint firstItem="2bn-gC-yRG" firstAttribute="leading" secondItem="hL3-vn-vfq" secondAttribute="trailing" constant="20" id="W0f-Su-JiP"/>
                             <constraint firstItem="2bn-gC-yRG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="djc-ql-3Q2" secondAttribute="leading" constant="20" symbolic="YES" id="Zph-gM-qYA"/>
                             <constraint firstItem="oOQ-pl-ZTf" firstAttribute="bottom" secondItem="2bn-gC-yRG" secondAttribute="bottom" constant="10" id="aKh-AQ-prb"/>
                             <constraint firstItem="oOQ-pl-ZTf" firstAttribute="trailing" secondItem="lRy-Oi-0Ul" secondAttribute="trailing" id="eJ0-v4-4eP"/>
@@ -136,6 +146,7 @@
                             <constraint firstItem="oOQ-pl-ZTf" firstAttribute="trailing" secondItem="2bn-gC-yRG" secondAttribute="trailing" constant="20" id="gg6-lT-o87"/>
                             <constraint firstItem="lRy-Oi-0Ul" firstAttribute="top" secondItem="xFH-hB-UIA" secondAttribute="bottom" id="peH-Qa-4hc"/>
                             <constraint firstItem="oOQ-pl-ZTf" firstAttribute="bottom" secondItem="Awt-mC-qqm" secondAttribute="bottom" constant="10" id="tfL-hj-91B"/>
+                            <constraint firstItem="hL3-vn-vfq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="djc-ql-3Q2" secondAttribute="leading" constant="20" symbolic="YES" id="ulA-oF-UPq"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="oOQ-pl-ZTf"/>
                     </view>
@@ -149,9 +160,63 @@
             </objects>
             <point key="canvasLocation" x="1250" y="107"/>
         </scene>
+        <!--Matrix Controller-->
+        <scene sceneID="sdV-y2-0IP">
+            <objects>
+                <viewController id="fDT-5W-ak2" customClass="MatrixController" customModule="Maze" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xQr-3w-peh">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="g6M-uX-cUZ">
+                                <rect key="frame" x="0.0" y="20" width="375" height="281.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="g6M-uX-cUZ" secondAttribute="height" multiplier="4:3" id="bOD-vm-iVi"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lVV-IJ-LTn">
+                                <rect key="frame" x="321" y="627" width="34" height="30"/>
+                                <state key="normal" title="Back"/>
+                                <connections>
+                                    <segue destination="REU-yO-td4" kind="show" id="fno-an-yi6"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="x17-rb-BrR">
+                                <rect key="frame" x="0.0" y="301.5" width="375" height="281.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="x17-rb-BrR" secondAttribute="height" multiplier="4:3" id="pOr-EA-Lve"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="g6M-uX-cUZ" firstAttribute="leading" secondItem="Rw7-HL-clr" secondAttribute="leading" id="4Ma-e0-CZr"/>
+                            <constraint firstItem="x17-rb-BrR" firstAttribute="top" secondItem="g6M-uX-cUZ" secondAttribute="bottom" id="9MX-rP-q0L"/>
+                            <constraint firstItem="x17-rb-BrR" firstAttribute="leading" secondItem="Rw7-HL-clr" secondAttribute="leading" id="C5s-lr-RJ6"/>
+                            <constraint firstItem="Rw7-HL-clr" firstAttribute="trailing" secondItem="g6M-uX-cUZ" secondAttribute="trailing" id="Hts-LS-SUc"/>
+                            <constraint firstAttribute="trailing" secondItem="x17-rb-BrR" secondAttribute="trailing" id="I8c-tx-Liv"/>
+                            <constraint firstItem="Rw7-HL-clr" firstAttribute="trailing" secondItem="lVV-IJ-LTn" secondAttribute="trailing" constant="20" id="YCv-CA-KPn"/>
+                            <constraint firstItem="lVV-IJ-LTn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xQr-3w-peh" secondAttribute="leading" constant="20" symbolic="YES" id="hcF-Tr-Mo8"/>
+                            <constraint firstItem="Rw7-HL-clr" firstAttribute="bottom" secondItem="lVV-IJ-LTn" secondAttribute="bottom" constant="10" id="y5d-wR-h7U"/>
+                            <constraint firstItem="g6M-uX-cUZ" firstAttribute="top" secondItem="Rw7-HL-clr" secondAttribute="top" id="yQD-HZ-nhO"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Rw7-HL-clr"/>
+                    </view>
+                    <connections>
+                        <outlet property="matrixImageView" destination="g6M-uX-cUZ" id="tVZ-Us-rEe"/>
+                        <outlet property="sharpImageView" destination="x17-rb-BrR" id="vDA-8O-lci"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BVa-BJ-e1T" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1991" y="107"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Nsave" width="24" height="24"/>
         <image name="ic_flash_off" width="24" height="24"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="fno-an-yi6"/>
+    </inferredMetricsTieBreakers>
 </document>

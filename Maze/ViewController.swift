@@ -20,9 +20,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate{
     
     let cameraController = CameraController()
     
-    var wholeImage: UIImage!
-    var mazeImage: UIImage!
-    var comment: String!
+    var maze = Maze()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,7 +71,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate{
         print("Found \(features.count) Rects")
         for feature in features as! [CIRectangleFeature] {
             resultImage = self.cropRect(image: image, feature: feature)
-            self.wholeImage = UIImage(ciImage: overlay(originalImage: image, feature: feature))
+            self.maze.wholeImage = UIImage(ciImage: overlay(originalImage: image, feature: feature))
         }
         return resultImage
     }
@@ -147,24 +145,22 @@ class ViewController: UIViewController, UINavigationControllerDelegate{
             if let found = self.detectRect(image: CIImage(image: photo)!){
                 print("Found Rect")
                 // self.wholeImage set in detectRect in this case
-                self.mazeImage = UIImage(ciImage: found)
-                self.comment = "Found Rect"
+                self.maze.mazeImage = UIImage(ciImage: found)
+                self.maze.comment = "Found Rect"
             }else{
                 print("Didnt Found")
-                self.wholeImage = photo
-                self.mazeImage = #imageLiteral(resourceName: "huaji")
-                self.comment = "Didn't Found"
+                self.maze.wholeImage = photo
+                self.maze.mazeImage = #imageLiteral(resourceName: "huaji")
+                self.maze.comment = "Didn't Found"
             }
             
             if (self.save){
                 try? PHPhotoLibrary.shared().performChangesAndWait {
-                    PHAssetChangeRequest.creationRequestForAsset(from: self.mazeImage)
+                    PHAssetChangeRequest.creationRequestForAsset(from: self.maze.mazeImage)
                 }
             }
-
-            destin.comment = self.comment
-            destin.mazeImage = self.mazeImage
-            destin.wholeImage = self.wholeImage
+            
+            destin.maze = self.maze
             destin.update()
         }
     }
