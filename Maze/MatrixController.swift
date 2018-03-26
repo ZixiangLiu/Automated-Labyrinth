@@ -21,7 +21,7 @@ class MatrixController: UIViewController, UINavigationControllerDelegate, UIImag
         if (self.maze.smallImage) != nil{
             self.maze.convertToGrayScale()
             self.matrixImageView.image = self.maze.greyImage
-            if let image = self.maze.generateMatrixImage(){
+            if let image = self.maze.getColorRouteImage(startX: 50, startY: 50, endX: 550, endY: 550) {
                 self.sharpImageView.image = image
             }else{
                 self.sharpImageView.image = #imageLiteral(resourceName: "huaji")

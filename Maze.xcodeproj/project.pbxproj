@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		091751ED2047AE1D00EA1462 /* Maze.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091751EC2047AE1D00EA1462 /* Maze.swift */; };
 		091751EF2047AF9A00EA1462 /* MatrixController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091751EE2047AF9A00EA1462 /* MatrixController.swift */; };
+		091DB0B02066244A006D9014 /* PixelNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091DB0AF2066244A006D9014 /* PixelNode.swift */; };
+		091DB0B2206790E0006D9014 /* PriorityHeap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091DB0B1206790E0006D9014 /* PriorityHeap.swift */; };
 		09227740203A43C400105838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0922773F203A43C400105838 /* AppDelegate.swift */; };
 		09227742203A43C500105838 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09227741203A43C500105838 /* ViewController.swift */; };
 		09227745203A43C500105838 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09227743203A43C500105838 /* Main.storyboard */; };
@@ -22,6 +24,8 @@
 /* Begin PBXFileReference section */
 		091751EC2047AE1D00EA1462 /* Maze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maze.swift; sourceTree = "<group>"; };
 		091751EE2047AF9A00EA1462 /* MatrixController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixController.swift; sourceTree = "<group>"; };
+		091DB0AF2066244A006D9014 /* PixelNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelNode.swift; sourceTree = "<group>"; };
+		091DB0B1206790E0006D9014 /* PriorityHeap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityHeap.swift; sourceTree = "<group>"; };
 		0922773C203A43C400105838 /* Maze.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Maze.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0922773F203A43C400105838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		09227741203A43C500105838 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +73,8 @@
 				091751EC2047AE1D00EA1462 /* Maze.swift */,
 				09A117EE2046803600084339 /* PreviewController.swift */,
 				091751EE2047AF9A00EA1462 /* MatrixController.swift */,
+				091DB0AF2066244A006D9014 /* PixelNode.swift */,
+				091DB0B1206790E0006D9014 /* PriorityHeap.swift */,
 				09A117EC20466ED200084339 /* CameraController.swift */,
 				09227743203A43C500105838 /* Main.storyboard */,
 				09227749203A43C500105838 /* Assets.xcassets */,
@@ -153,8 +159,10 @@
 			files = (
 				091751EF2047AF9A00EA1462 /* MatrixController.swift in Sources */,
 				09227748203A43C500105838 /* Maze.xcdatamodeld in Sources */,
+				091DB0B02066244A006D9014 /* PixelNode.swift in Sources */,
 				09227742203A43C500105838 /* ViewController.swift in Sources */,
 				091751ED2047AE1D00EA1462 /* Maze.swift in Sources */,
+				091DB0B2206790E0006D9014 /* PriorityHeap.swift in Sources */,
 				09A117ED20466ED200084339 /* CameraController.swift in Sources */,
 				09A117EF2046803600084339 /* PreviewController.swift in Sources */,
 				09227740203A43C400105838 /* AppDelegate.swift in Sources */,
