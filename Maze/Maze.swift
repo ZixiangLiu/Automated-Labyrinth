@@ -303,7 +303,7 @@ class Maze{
                 let dr = this[0] - next[0]
                 let dc = this[1] - next[1]
                 let direct = 10*dr + dc
-                if (direct != preDirect || easyDist(point1: prePoint, point2: this) > 40) {
+                if (direct != preDirect || easyDist(point1: prePoint, point2: this) > 100) {
                     tempArray.append(this)
                     preDirect = direct
                     prePoint = this
@@ -338,7 +338,7 @@ class Maze{
         if self.BTRouteArray.isEmpty{
             let cta = self.getConciseArray()
             for p in cta {
-                self.BTRouteArray.append([p[0]+200, p[1]+200])
+                self.BTRouteArray.append([Int(Double(p[1])*1.382)+130, Int(Double(p[0])*1.48)+90])
             }
             return self.BTRouteArray
         }else{
