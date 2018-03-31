@@ -47,7 +47,7 @@ class Maze{
     // height of matrix used in route calculation
     let rh = 200
     // width of ball
-    let wb = 4
+    let wb = 6
     // size of start and end mark
     let sizeSE = 15
     // width of route
