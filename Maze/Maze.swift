@@ -35,13 +35,19 @@ class Maze{
     var routeArray: [[Int]] = []
     // route array of only turning points
     var conciseRouteArray: [[Int]] = []
+    // route array of only turning points
+    var BTRouteArray: [[Int]] = []
     
     // width of matrix
     let w = 600
     // height of matrix
     let h = 600
+    // width of matrix used in route calculation
+    let rw = 200
+    // height of matrix used in route calculation
+    let rh = 200
     // width of ball
-    let wb = 20
+    let wb = 4
     // size of start and end mark
     let sizeSE = 15
     // width of route
@@ -145,11 +151,11 @@ class Maze{
     }
     
     func validRow(Row r: Int) -> Bool {
-        return (r > -1 && r < h)
+        return (r > -1 && r < rh)
     }
     
     func validColumn(Column c: Int) -> Bool {
-        return (c > -1 && c < w)
+        return (c > -1 && c < rw)
     }
     
     // use the matrix to calculate route out of the maze
@@ -159,22 +165,37 @@ class Maze{
         var pQueue: Array<PixelNode> = Array()
         
         let mat = self.getMatrix()!
+        var routeMat = Array(repeating: Array(repeating: 0, count: rw), count: rh)
+        let sf = Int(h/rh) // scale factor
+        
+        // initialize route matrix, a smaller version of the matrix
+        for r in 0 ..< rh {
+            for c in 0 ..< rw {
+                for i in sf*r ..< sf*(r+1){
+                    for j in sf*c ..< sf*(c+1){
+                        if mat[i][j] {
+                            routeMat[r][c] = routeMat[r][c]+1
+                        }
+                    }
+                }
+            }
+        }
         
         // initialize graph
-        for r in 0 ..< h {
+        for r in 0 ..< rh {
             var oneRow: [PixelNode] = []
-            for c in 0 ..< w {
+            for c in 0 ..< rw {
                 oneRow.append(PixelNode(Row: r, Column: c, ballWidth: wb))
             }
             matGraph.append(oneRow)
         }
         
         // set wall distance
-        for r in 0 ..< h {
-            for c in 0 ..< w {
-                if (mat[r][c]){
-                    for l in max(0, r-2*wb) ... min(h-1, r+2*wb) {
-                        for k in max(0, c-2*wb) ... min(w-1, c+2*wb) {
+        for r in 0 ..< rh {
+            for c in 0 ..< rw {
+                if (routeMat[r][c] > 0){
+                    for l in max(0, r-2*wb) ... min(rh-1, r+2*wb) {
+                        for k in max(0, c-2*wb) ... min(rw-1, c+2*wb) {
                             matGraph[l][k].setDistWall(wallRoll: r, wallColumn: c)
                         }
                     }
@@ -183,8 +204,10 @@ class Maze{
         }
         
         // bfs
-        let _ = matGraph[ex][ey].setDistStart(distStart: 0)
-        pQueue.append(matGraph[ex][ey])
+        let rex = Int(ex/sf)
+        let rey = Int(ey/sf)
+        let _ = matGraph[rex][rey].setDistStart(distStart: 0)
+        pQueue.append(matGraph[rex][rey])
         
         while (!pQueue.isEmpty){
             let p = pQueue.removeFirst()
@@ -251,10 +274,11 @@ class Maze{
         }
         
         var route: [[Int]] = []
-        var xp = sx
-        var yp = sy
+        var xp = Int(sx/sf)
+        var yp = Int(sy/sf)
+        let hsf = Int(sf/2)
         while (matGraph[xp][yp].previousNodeC != -1) {
-            route.append([xp, yp])
+            route.append([xp*sf+hsf, yp*sf+hsf])
             let r = matGraph[xp][yp].previousNodeR
             let c = matGraph[xp][yp].previousNodeC
             xp = r
@@ -279,30 +303,46 @@ class Maze{
                 let dr = this[0] - next[0]
                 let dc = this[1] - next[1]
                 let direct = 10*dr + dc
-                if (direct != preDirect || easyDist(point1: prePoint, point2: this) > wb*2) {
+                if (direct != preDirect || easyDist(point1: prePoint, point2: this) > 40) {
                     tempArray.append(this)
                     preDirect = direct
                     prePoint = this
                 }
             }
             
-            prePoint = tempArray[0]
-            // start point
-            self.conciseRouteArray.append(prePoint)
-            // get rid of too crowded middle points
-            for i in 1 ..< tempArray.count {
-                let current = tempArray[i]
-                if (easyDist(point1: prePoint, point2: current) > wb-5) {
-                    prePoint = current
-                    self.conciseRouteArray.append(current)
+            if tempArray.isEmpty{
+                print("No route available")
+            }else{
+                prePoint = tempArray[0]
+                // start point
+                self.conciseRouteArray.append(prePoint)
+                // get rid of too crowded middle points
+                for i in 1 ..< tempArray.count {
+                    let current = tempArray[i]
+                    if (easyDist(point1: prePoint, point2: current) > 15) {
+                        prePoint = current
+                        self.conciseRouteArray.append(current)
+                    }
                 }
+                // end point
+                self.conciseRouteArray.append(routeArray[routeArray.count-1])
             }
-            // end point
-            self.conciseRouteArray.append(routeArray[routeArray.count-1])
             
             return self.conciseRouteArray
         }else{
             return self.conciseRouteArray
+        }
+    }
+    
+    func getBTRouteArray() -> [[Int]] {
+        if self.BTRouteArray.isEmpty{
+            let cta = self.getConciseArray()
+            for p in cta {
+                self.BTRouteArray.append([p[0]+200, p[1]+200])
+            }
+            return self.BTRouteArray
+        }else{
+            return self.BTRouteArray
         }
     }
     
@@ -403,12 +443,12 @@ class Maze{
         }
     }
     
-    // convert matrix to string to string
+    // convert matrix to string
     func matrixToString(myArray: [[Int]]) -> String {
         var outputString = "s"
         for i in 0...myArray.count-1 {
             for j in 0...myArray[0].count-1 {
-                outputString += String(myArray[i][j]) + ","
+                outputString += String(format: "%03d", myArray[i][j]) + ","
             }
         }
         outputString += "e"
@@ -448,7 +488,7 @@ extension UIImage {
             var vmat = Array(repeating: Array(repeating: 0, count: w), count: h)
             
             // threshold to detect black
-            let thres = 75
+            let thres = 100
             
             // fill bigMat by black(true) and white
             for i in 0 ..< h {

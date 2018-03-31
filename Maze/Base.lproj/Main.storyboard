@@ -187,14 +187,24 @@
                                     <constraint firstAttribute="width" secondItem="x17-rb-BrR" secondAttribute="height" multiplier="4:3" id="pOr-EA-Lve"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wfw-wc-zV7">
+                                <rect key="frame" x="20" y="627" width="80" height="30"/>
+                                <state key="normal" title="Send Route"/>
+                                <connections>
+                                    <action selector="launchBluetooth" destination="fDT-5W-ak2" eventType="touchUpInside" id="Dhx-Z1-8ha"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="g6M-uX-cUZ" firstAttribute="leading" secondItem="Rw7-HL-clr" secondAttribute="leading" id="4Ma-e0-CZr"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="wfw-wc-zV7" secondAttribute="trailing" constant="20" symbolic="YES" id="8eI-Ct-YHF"/>
                             <constraint firstItem="x17-rb-BrR" firstAttribute="top" secondItem="g6M-uX-cUZ" secondAttribute="bottom" id="9MX-rP-q0L"/>
                             <constraint firstItem="x17-rb-BrR" firstAttribute="leading" secondItem="Rw7-HL-clr" secondAttribute="leading" id="C5s-lr-RJ6"/>
+                            <constraint firstItem="wfw-wc-zV7" firstAttribute="leading" secondItem="Rw7-HL-clr" secondAttribute="leading" constant="20" id="HGc-Ud-5rt"/>
                             <constraint firstItem="Rw7-HL-clr" firstAttribute="trailing" secondItem="g6M-uX-cUZ" secondAttribute="trailing" id="Hts-LS-SUc"/>
                             <constraint firstAttribute="trailing" secondItem="x17-rb-BrR" secondAttribute="trailing" id="I8c-tx-Liv"/>
+                            <constraint firstItem="Rw7-HL-clr" firstAttribute="bottom" secondItem="wfw-wc-zV7" secondAttribute="bottom" constant="10" id="SaX-qc-FhI"/>
                             <constraint firstItem="Rw7-HL-clr" firstAttribute="trailing" secondItem="lVV-IJ-LTn" secondAttribute="trailing" constant="20" id="YCv-CA-KPn"/>
                             <constraint firstItem="lVV-IJ-LTn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xQr-3w-peh" secondAttribute="leading" constant="20" symbolic="YES" id="hcF-Tr-Mo8"/>
                             <constraint firstItem="Rw7-HL-clr" firstAttribute="bottom" secondItem="lVV-IJ-LTn" secondAttribute="bottom" constant="10" id="y5d-wR-h7U"/>

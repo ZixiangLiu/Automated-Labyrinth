@@ -32,6 +32,27 @@ class MatrixController: UIViewController, UINavigationControllerDelegate, UIImag
         }
     }
     
+    @IBAction func launchBluetooth() {
+        let decodedURL = "serial://" + self.maze.matrixToString(myArray: maze.getBTRouteArray())
+        let alertPrompt = UIAlertController(title: "Open App", message: "You're going to open \(decodedURL)", preferredStyle: .actionSheet)
+        let confirmAction = UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default, handler: { (action) -> Void in
+            //            let url = URL(string: decodedURL)
+            //            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+            if let url = URL(string: decodedURL) {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
+        
+        alertPrompt.addAction(confirmAction)
+        alertPrompt.addAction(cancelAction)
+        
+        present(alertPrompt, animated: true, completion: nil)
+    }
+        
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
