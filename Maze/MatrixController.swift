@@ -15,13 +15,23 @@ class MatrixController: UIViewController, UINavigationControllerDelegate, UIImag
     @IBOutlet weak var sharpImageView: UIImageView!
     var maze = Maze()
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier=="charlie"){
+            let destination = segue.destination as! PreviewController
+            destination.maze = self.maze
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.maze.resize()
         if (self.maze.smallImage) != nil{
+            print("0")
             self.maze.convertToGrayScale()
             self.matrixImageView.image = self.maze.greyImage
+            print("1")
             if let image = self.maze.getColorRouteImage(startX: 50, startY: 50, endX: 550, endY: 550) {
+                print("2")
                 self.sharpImageView.image = image
             }else{
                 self.sharpImageView.image = #imageLiteral(resourceName: "huaji")

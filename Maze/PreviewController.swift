@@ -14,17 +14,26 @@ class PreviewController: UIViewController, UINavigationControllerDelegate, UIIma
     @IBOutlet weak var mazeImageView: UIImageView!
     @IBOutlet weak var wholeImageView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var wbSlider: UISlider!
     
     var smallImage: UIImage!
     var maze = Maze()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.update()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func changeWB(_ sender: UISlider) {
+        if (!sender.isTracking) {
+            print(sender.value)
+            maze.setWall(ballWidth: Int(sender.value))
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

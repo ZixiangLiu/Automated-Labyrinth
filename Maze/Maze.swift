@@ -47,7 +47,7 @@ class Maze{
     // height of matrix used in route calculation
     let rh = 200
     // width of ball
-    let wb = 15
+    var wb = 15
     // size of start and end mark
     let sizeSE = 15
     // width of route
@@ -59,6 +59,13 @@ class Maze{
     let colorSpace = CGColorSpaceCreateDeviceRGB()
     // the matrix form of the maze
     var mat: Array<Array<Bool>>!
+    
+    func setWall(ballWidth wb: Int){
+        self.wb = wb
+        self.routeArray = []
+        self.conciseRouteArray = []
+        self.BTRouteArray = []
+    }
     
     func setValue(mazeImage maze: UIImage, wholeImage whole: UIImage, comment comm: String){
         self.mazeImage = maze
@@ -102,51 +109,39 @@ class Maze{
     
     // use this method to get the matrix of the maze grey scale
     func getMatrix() -> Array<Array<Bool>>? {
-        if let mat = self.mat{
-            return mat
-        }else{
-            if let grey = self.greyImage {
-                self.mat = grey.cgGetMatrix()
-            }else{
-                self.convertToGrayScale()
-                self.mat = self.getMatrix()
-            }
-            return self.mat
-        }
+        self.convertToGrayScale()
+        return self.greyImage!.cgGetMatrix()
     }
     
     // Use this method to get the matrix image of the maze grey scale
     func getGreyMatrixImage() -> UIImage? {
-        if let image = self.matrixImage{
-            return image
-        }else{
-            if let mat = self.getMatrix(){
-                let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w, space: greyColorSpace, bitmapInfo: bitmapInfo)!
+        if let mat = self.getMatrix(){
+            let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w, space:
+                greyColorSpace, bitmapInfo: bitmapInfo)!
                 
-                if let pixelBuffer = context.data?.assumingMemoryBound(to: UInt8.self){
+            if let pixelBuffer = context.data?.assumingMemoryBound(to: UInt8.self){
                     
-                    for r in 0 ..< h {
-                        for c in 0 ..< w {
-                            if (mat[r][c]){
-                                pixelBuffer[r*w+c] = 0
-                            }else{
-                                pixelBuffer[r*w+c] = 255
-                            }
+                for r in 0 ..< h {
+                    for c in 0 ..< w {
+                        if (mat[r][c]){
+                            pixelBuffer[r*w+c] = 0
+                        }else{
+                            pixelBuffer[r*w+c] = 255
                         }
                     }
-                    
-                    let cgImage = context.makeImage()!
-                    self.matrixImage = UIImage(cgImage: cgImage)
-                    return self.matrixImage
-                }else{
-                    print("Error extracting Matrix from grey scale")
-                    return nil
                 }
                 
+                let cgImage = context.makeImage()!
+                self.matrixImage = UIImage(cgImage: cgImage)
+                return self.matrixImage
             }else{
-                print("Error creating context data buffer for new image.")
+                print("Error extracting Matrix from grey scale")
                 return nil
             }
+            
+        }else{
+            print("Error creating context data buffer for new image.")
+            return nil
         }
     }
     
@@ -249,28 +244,6 @@ class Maze{
                     }
                 }
             }
-            
-//            for r in max(0, p.row-1) ... min(p.row+1, h-1) {
-//                for c in max(0, p.column-1) ... min(p.column+1, w-1) {
-//                    let n = matGraph[r][c]
-//                    if (!n.marked && n.valid()){
-//
-//                        let diff = abs(r-p.row)+abs(c-p.column)
-//                        if (diff == 2){ // if diagonal neighbour
-//
-//                        }
-//
-//                        if (n.setDistStart(distStart: p.distStart + edgeWeight)) {
-//                            n.setPrevious(previousRow: p.row, previousColumn: p.column)
-//                        }
-//                        pQueue.append(n)
-//                        n.mark()
-//                    }
-//                }
-//            }
-            
-            
-
         }
         
         var route: [[Int]] = []
@@ -293,153 +266,140 @@ class Maze{
     }
     
     func getConciseArray() -> [[Int]]{
-        if self.conciseRouteArray.isEmpty {
-            var tempArray: [[Int]] = []
-            var preDirect = 0
-            var prePoint = self.routeArray[0]
-            for i in 0 ..< routeArray.count-1 {
-                let this = routeArray[i]
-                let next = routeArray[i+1]
-                let dr = this[0] - next[0]
-                let dc = this[1] - next[1]
-                let direct = 10*dr + dc
-                if (direct != preDirect || easyDist(point1: prePoint, point2: this) > 100) {
-                    tempArray.append(this)
-                    preDirect = direct
-                    prePoint = this
-                }
+        var tempArray: [[Int]] = []
+        var preDirect = 0
+        var prePoint = self.routeArray[0]
+        for i in 0 ..< routeArray.count-1 {
+            let this = routeArray[i]
+            let next = routeArray[i+1]
+            let dr = this[0] - next[0]
+            let dc = this[1] - next[1]
+            let direct = 10*dr + dc
+            if (direct != preDirect || easyDist(point1: prePoint, point2: this) > 100) {
+                tempArray.append(this)
+                preDirect = direct
+                prePoint = this
             }
-            
-            if tempArray.isEmpty{
-                print("No route available")
-            }else{
-                prePoint = tempArray[0]
-                // start point
-                self.conciseRouteArray.append(prePoint)
-                // get rid of too crowded middle points
-                for i in 1 ..< tempArray.count {
-                    let current = tempArray[i]
-                    if (easyDist(point1: prePoint, point2: current) > 15) {
-                        prePoint = current
-                        self.conciseRouteArray.append(current)
-                    }
-                }
-                // end point
-                self.conciseRouteArray.append(routeArray[routeArray.count-1])
-            }
-            
-            return self.conciseRouteArray
-        }else{
-            return self.conciseRouteArray
         }
+        
+        if tempArray.isEmpty{
+            print("No route available")
+        }else{
+            prePoint = tempArray[0]
+            // start point
+            self.conciseRouteArray.append(prePoint)
+            // get rid of too crowded middle points
+            for i in 1 ..< tempArray.count {
+                let current = tempArray[i]
+                if (easyDist(point1: prePoint, point2: current) > 15) {
+                    prePoint = current
+                    self.conciseRouteArray.append(current)
+                }
+            }
+            // end point
+            self.conciseRouteArray.append(routeArray[routeArray.count-1])
+        }
+        
+        return self.conciseRouteArray
     }
     
     func getBTRouteArray() -> [[Int]] {
-        if self.BTRouteArray.isEmpty{
-            let cta = self.getConciseArray()
-            for p in cta {
-                self.BTRouteArray.append([Int(Double(p[1])*1.382)+130, Int(Double(p[0])*1.48)+90])
-            }
-            return self.BTRouteArray
-        }else{
-            return self.BTRouteArray
+        let cta = self.getConciseArray()
+        for p in cta {
+            self.BTRouteArray.append([Int(Double(p[1])*1.382)+130, Int(Double(p[0])*1.48)+90])
         }
+        return self.BTRouteArray
     }
     
     // Use this method to get the matrix image of the maze grey scale
     // x is row, y is column
     func getColorRouteImage(startX sx: Int, startY sy: Int, endX ex: Int, endY ey: Int) -> UIImage? {
-        if let image = self.routeImage{
-            return image
-        }else{
-            if self.routeArray.isEmpty {
-                self.calculateRoute(startX: sx, startY: sy, endX: ex, endY: ey)
-            }
-            if let mat = self.getMatrix(){
-                let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w*4, space: colorSpace, bitmapInfo: colorBitmapInfo)!
+        self.calculateRoute(startX: sx, startY: sy, endX: ex, endY: ey)
+        
+        if let mat = self.getMatrix(){
+            let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w*4, space: colorSpace, bitmapInfo: colorBitmapInfo)!
                 
-                if let pixelBuffer = context.data?.assumingMemoryBound(to: UInt8.self){
-                    
-                    for r in 0 ..< h {
-                        for c in 0 ..< w {
-                            let p = (r*w+c)*4
-                            
-                            if (mat[r][c]){
-                                // black wall
-                                pixelBuffer[p] = 0
-                                pixelBuffer[p+1] = 0
-                                pixelBuffer[p+2] = 0
-                                pixelBuffer[p+3] = 255
-                            }else{
-                                // white ground
-                                pixelBuffer[p] = 255
-                                pixelBuffer[p+1] = 255
-                                pixelBuffer[p+2] = 255
-                                pixelBuffer[p+3] = 255
-                            }
-                        }
-                    }
-                    
-                    // red start
-                    for r in max(0, sx-sizeSE) ... min(h-1, sx+sizeSE) {
-                        for c in max(0, sy-sizeSE) ... min(w-1, sy+sizeSE) {
-                            let p = (r*w+c)*4
-                            
-                            pixelBuffer[p] = 255
+            if let pixelBuffer = context.data?.assumingMemoryBound(to: UInt8.self){
+                
+                for r in 0 ..< h {
+                    for c in 0 ..< w {
+                        let p = (r*w+c)*4
+                        
+                        if (mat[r][c]){
+                            // black wall
+                            pixelBuffer[p] = 0
                             pixelBuffer[p+1] = 0
                             pixelBuffer[p+2] = 0
+                            pixelBuffer[p+3] = 255
+                        }else{
+                            // white ground
+                            pixelBuffer[p] = 255
+                            pixelBuffer[p+1] = 255
+                            pixelBuffer[p+2] = 255
+                            pixelBuffer[p+3] = 255
                         }
                     }
+                }
+                
+                // red start
+                for r in max(0, sx-sizeSE) ... min(h-1, sx+sizeSE) {
+                    for c in max(0, sy-sizeSE) ... min(w-1, sy+sizeSE) {
+                        let p = (r*w+c)*4
+                        
+                        pixelBuffer[p] = 255
+                        pixelBuffer[p+1] = 0
+                        pixelBuffer[p+2] = 0
+                    }
+                }
+                
+                // green end
+                for r in max(0, ex-sizeSE) ... min(h-1, ex+sizeSE) {
+                    for c in max(0, ey-sizeSE) ... min(w-1, ey+sizeSE) {
+                        let p = (r*w+c)*4
+                        
+                        pixelBuffer[p] = 0
+                        pixelBuffer[p+1] = 255
+                        pixelBuffer[p+2] = 0
+                    }
+                }
                     
-                    // green end
-                    for r in max(0, ex-sizeSE) ... min(h-1, ex+sizeSE) {
-                        for c in max(0, ey-sizeSE) ... min(w-1, ey+sizeSE) {
+                // blue route
+                for point in self.routeArray{
+                    for r in max(0, point[0]-wr) ... min(h-1, point[0]+wr) {
+                        for c in max(0, point[1]-wr) ... min(w-1, point[1]+wr) {
                             let p = (r*w+c)*4
                             
                             pixelBuffer[p] = 0
+                            pixelBuffer[p+1] = 0
+                            pixelBuffer[p+2] = 255
+                        }
+                    }
+                }
+                    
+                // yellow route turning point
+                for point in self.getConciseArray() {
+                    for r in max(0, point[0]-wr) ... min(h-1, point[0]+wr) {
+                        for c in max(0, point[1]-wr) ... min(w-1, point[1]+wr) {
+                            let p = (r*w+c)*4
+                                
+                            pixelBuffer[p] = 255
                             pixelBuffer[p+1] = 255
                             pixelBuffer[p+2] = 0
                         }
                     }
-                    
-                    // blue route
-                    for point in self.routeArray{
-                        for r in max(0, point[0]-wr) ... min(h-1, point[0]+wr) {
-                            for c in max(0, point[1]-wr) ... min(w-1, point[1]+wr) {
-                                let p = (r*w+c)*4
-                                
-                                pixelBuffer[p] = 0
-                                pixelBuffer[p+1] = 0
-                                pixelBuffer[p+2] = 255
-                            }
-                        }
-                    }
-                    
-                    // yellow route turning point
-                    for point in self.getConciseArray() {
-                        for r in max(0, point[0]-wr) ... min(h-1, point[0]+wr) {
-                            for c in max(0, point[1]-wr) ... min(w-1, point[1]+wr) {
-                                let p = (r*w+c)*4
-                                
-                                pixelBuffer[p] = 255
-                                pixelBuffer[p+1] = 255
-                                pixelBuffer[p+2] = 0
-                            }
-                        }
-                    }
-                    
-                    let cgImage = context.makeImage()!
-                    self.matrixImage = UIImage(cgImage: cgImage)
-                    return self.matrixImage
-                }else{
-                    print("Error extracting Matrix from grey scale")
-                    return nil
                 }
                 
+                let cgImage = context.makeImage()!
+                self.matrixImage = UIImage(cgImage: cgImage)
+                return self.matrixImage
             }else{
-                print("Error creating context data buffer for new image.")
+                print("Error extracting Matrix from grey scale")
                 return nil
             }
+            
+        }else{
+            print("Error creating context data buffer for new image.")
+            return nil
         }
     }
     
